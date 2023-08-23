@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Coursera/Machine-Learning-Specialization"
+		},
+		{
+			"name": "Coursera-Machine-Learning-Specialization",
+			"path": "../../GitApps/Coursera-Machine-Learning-Specialization"
+		},
+		{
+			"path": "../scikit-learn"
+		},
+		{
+			"path": "../../ObsidianVaults/ObsidianVault/02_Areas/Config"
+		},
+	],
+	"settings": {
+		"powershell.cwd": "e:\\Code\\machine-learning-introduction",
+		"terminal.integrated.cwd": "E:/Code/Machine-Learning-Specialization-Coursera",
+		"git.ignoredRepositories": [
+			"E:\\ObsidianVaults"
+		]
+	},
+}
