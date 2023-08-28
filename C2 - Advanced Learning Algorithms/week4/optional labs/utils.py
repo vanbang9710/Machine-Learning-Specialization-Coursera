@@ -9,7 +9,7 @@ plt.style.use('./deeplearning.mplstyle')
 def compute_entropy(y):
 
     entropy = 0
-    
+
     if len(y) == 0:
         return 0
     entropy = sum(y[y==1])/len(y)
@@ -17,7 +17,7 @@ def compute_entropy(y):
         return 0
     else:
         return -entropy*np.log2(entropy) - (1-entropy)*np.log2(1-entropy)
-     
+
 
 def split_dataset(X, node_indices, feature):
 
@@ -29,21 +29,21 @@ def split_dataset(X, node_indices, feature):
             left_indices.append(i)
         else:
             right_indices.append(i)
-        
-    return left_indices, right_indices   
-    
-    
+
+    return left_indices, right_indices
+
+
 
 def compute_information_gain(X, y, node_indices, feature):
-    
+
     left_indices, right_indices = split_dataset(X, node_indices, feature)
-    
+
     X_node, y_node = X[node_indices], y[node_indices]
     X_left, y_left = X[left_indices], y[left_indices]
     X_right, y_right = X[right_indices], y[right_indices]
-    
+
     information_gain = 0
-    
+
     node_entropy = compute_entropy(y_node)
     left_entropy = compute_entropy(y_left)
     right_entropy = compute_entropy(y_right)
@@ -51,12 +51,12 @@ def compute_information_gain(X, y, node_indices, feature):
     w_right = len(X_right) / len(X_node)
     weighted_entropy = w_left * left_entropy + w_right * right_entropy
     information_gain = node_entropy - weighted_entropy
-    
+
     return information_gain
 
-def get_best_split(X, y, node_indices):   
+def get_best_split(X, y, node_indices):
     num_features = X.shape[1]
-    
+
     best_feature = -1
 
     max_info_gain = 0
@@ -65,8 +65,8 @@ def get_best_split(X, y, node_indices):
         if info_gain > max_info_gain:
             max_info_gain = info_gain
             best_feature = feature
-        
-   
+
+
     return best_feature
 
 
@@ -76,17 +76,17 @@ def build_tree_recursive(X, y, node_indices, branch_name, max_depth, current_dep
         formatting = " "*current_depth + "-"*current_depth
         print(formatting, "%s leaf node with indices" % branch_name, node_indices)
         return
-   
 
-    best_feature = get_best_split(X, y, node_indices) 
-    
+
+    best_feature = get_best_split(X, y, node_indices)
+
     formatting = "-"*current_depth
     print("%s Depth %d, %s: Split on feature: %d" % (formatting, current_depth, branch_name, best_feature))
-    
+
 
     left_indices, right_indices = split_dataset(X, node_indices, best_feature)
     tree.append((left_indices, right_indices, best_feature))
-    
+
     build_tree_recursive(X, y, left_indices, "Left", max_depth, current_depth+1, tree)
     build_tree_recursive(X, y, right_indices, "Right", max_depth, current_depth+1, tree)
     return tree
@@ -105,16 +105,16 @@ def generate_node_image(node_indices):
     for im in images:
         new_im.paste(im, (x_offset,0))
         x_offset += im.size[0]
-    
+
     new_im = new_im.resize((int(total_width*len(node_indices)/10), int(max_height*len(node_indices)/10)))
-    
+
     return new_im
 
 
 def generate_split_viz(node_indices, left_indices, right_indices, feature):
-    
+
     G=nx.DiGraph()
-    
+
     indices_list = [node_indices, left_indices, right_indices]
     for idx, indices in enumerate(indices_list):
         G.add_node(idx,image= generate_node_image(indices))
@@ -128,7 +128,7 @@ def generate_split_viz(node_indices, left_indices, right_indices, feature):
     ax=plt.subplot(111)
     ax.set_aspect('equal')
     nx.draw_networkx_edges(G,pos,ax=ax, arrows=True, arrowsize=40)
-    
+
     trans=ax.transData.transform
     trans2=fig.transFigure.inverted().transform
 
@@ -146,41 +146,41 @@ def generate_split_viz(node_indices, left_indices, right_indices, feature):
         a.set_title(ax_name[idx])
     ax.axis('off')
     plt.show()
-    
-    
+
+
 def generate_tree_viz(root_indices, y, tree):
-    
+
     G=nx.DiGraph()
-    
-    
+
+
     G.add_node(0,image= generate_node_image(root_indices))
     idx = 1
     root = 0
-    
+
     num_images = [len(root_indices)]
-    
+
     feature_name = ["Ear Shape", "Face Shape", "Whiskers"]
     y_name = ["Non Cat","Cat"]
-    
+
     decision_names = []
     leaf_names = []
-    
+
     for i, level in enumerate(tree):
         indices_list = level[:2]
         for indices in indices_list:
             G.add_node(idx,image= generate_node_image(indices))
             G.add_edge(root, idx)
-            
+
             # For visualization
             num_images.append(len(indices))
             idx += 1
             if i > 0:
                 leaf_names.append("Leaf node: %s" % y_name[max(y[indices])])
-            
+
         decision_names.append("Split on: %s" % feature_name[level[2]])
         root += 1
-    
-    
+
+
     node_names = decision_names + leaf_names
     pos = graphviz_layout(G, prog="dot")
 
@@ -188,7 +188,7 @@ def generate_tree_viz(root_indices, y, tree):
     ax=plt.subplot(111)
     ax.set_aspect('equal')
     nx.draw_networkx_edges(G,pos,ax=ax, arrows=True, arrowsize=40)
-    
+
     trans=ax.transData.transform
     trans2=fig.transFigure.inverted().transform
 
