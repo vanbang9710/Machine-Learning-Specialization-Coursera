@@ -1,10 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "../SMSAntispam"
+			"path": "../../../../home/vanba/Code/sms_antispam"
 		},
 		{
-			"path": "../AdvancedTopics"
+			"path": "../SMSAntispam"
 		},
 		{
 			"path": "../machinelearningcoban"
@@ -25,7 +25,7 @@
 	],
 	"settings": {
 		"powershell.cwd": "e:\\Code\\machine-learning-introduction",
-		"terminal.integrated.cwd": "E:/Code/Machine-Learning-Specialization-Coursera",
+		"terminal.integrated.cwd": "/home/vanba/Code/sms_antispam",
 		"git.ignoredRepositories": [
 			"E:\\ObsidianVaults"
 		]
